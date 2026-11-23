@@ -20,6 +20,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.apni.beyond.presentation.viewmodel.ApodViewModel
+import com.apni.beyond.presentation.viewmodel.SavedViewModel
 
 private val CardBlue = Color(0xFF1B2940)
 private val White = Color(0xFFF5F3ED)
@@ -28,6 +29,9 @@ private val Muted = Color(0xFFA9B8C9)
 @Composable
 fun GalleryScreen() {
     val apodViewModel: ApodViewModel = viewModel()
+    val savedViewModel: SavedViewModel = viewModel()
+    val savedIds by savedViewModel.savedIds.collectAsState()
+
     val apodList by apodViewModel.apodList.collectAsState()
     val isLoading by apodViewModel.isLoading.collectAsState()
     val errorMessage by apodViewModel.errorMessage.collectAsState()
@@ -119,6 +123,21 @@ fun GalleryScreen() {
                                         color = Muted,
                                         fontSize = 11.sp
                                     )
+
+                                    val imageId = item.postId?.toString() ?: item.date.orEmpty()
+
+                                    TextButton(
+                                        onClick = {
+                                            if (imageId.isNotEmpty()) {
+                                                savedViewModel.toggleSaved(imageId)
+                                            }
+                                        }
+                                    ) {
+                                        Text(
+                                            text = if (savedIds.contains(imageId)) "Saved" else "Save",
+                                            color = White
+                                        )
+                                    }
                                 }
                             }
                         }
