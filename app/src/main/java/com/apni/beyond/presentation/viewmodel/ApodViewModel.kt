@@ -31,16 +31,18 @@ class ApodViewModel(
             _isLoading.value = true
             _errorMessage.value = null
 
-            repository.getApod()
-                .onSuccess { response ->
-                    _apod.value = response
-                }
-                .onFailure { error ->
-                    _errorMessage.value =
-                        error.message ?: "Failed to load astronomy data."
-                }
-
-            _isLoading.value = false
+            try {
+                repository.getApod()
+                    .onSuccess { response ->
+                        _apod.value = response
+                    }
+                    .onFailure { error ->
+                        _errorMessage.value =
+                            error.message ?: "Failed to load astronomy data."
+                    }
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 }

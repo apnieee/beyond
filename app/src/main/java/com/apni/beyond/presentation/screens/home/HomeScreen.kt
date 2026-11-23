@@ -13,8 +13,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.material3.Text
-import com.apni.beyond.PageTitle
-import com.apni.beyond.InfoCard
+import com.apni.beyond.presentation.components.PageTitle
+import com.apni.beyond.presentation.components.InfoCard
 import com.apni.beyond.presentation.components.PlanetVisual
 
 private val AccentBlue = Color(0xFF789DFF)
