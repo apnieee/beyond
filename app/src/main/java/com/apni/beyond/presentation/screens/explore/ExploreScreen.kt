@@ -11,8 +11,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
-import com.apni.beyond.InfoCard
-import com.apni.beyond.PageTitle
+import com.apni.beyond.presentation.components.PageTitle
+import com.apni.beyond.presentation.components.InfoCard
 
 @Composable
 fun ExploreScreen() {

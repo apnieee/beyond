@@ -13,16 +13,31 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.material3.Text
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import coil.compose.AsyncImage
+import com.apni.beyond.presentation.viewmodel.ApodViewModel
+import com.apni.beyond.data.model.ApodResponse
 import com.apni.beyond.presentation.components.PageTitle
 import com.apni.beyond.presentation.components.InfoCard
 import com.apni.beyond.presentation.components.PlanetVisual
+import com.apni.beyond.presentation.components.ApodCard
 
 private val AccentBlue = Color(0xFF789DFF)
 private val White = Color(0xFFF5F3ED)
 private val Muted = Color(0xFFA9B8C9)
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    onOpenGallery: () -> Unit
+) {
+    val apodViewModel: ApodViewModel = viewModel()
+
+    val apod by apodViewModel.apod.collectAsState()
+    val isLoading by apodViewModel.isLoading.collectAsState()
+    val errorMessage by apodViewModel.errorMessage.collectAsState()
+
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(20.dp),
@@ -124,6 +139,18 @@ fun HomeScreen() {
                 fontWeight = FontWeight.Bold
             )
 
+            Spacer(modifier = Modifier.height(12.dp))
+
+            ApodCard(
+                apod = apod,
+                isLoading = isLoading,
+                errorMessage = errorMessage,
+                onRetry = { apodViewModel.fetchApod() },
+                onClick = onOpenGallery
+            )
+        }
+
+        item {
             InfoCard(
                 "Discover the universe",
                 "Explore a new astronomical image and story every day."

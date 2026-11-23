@@ -27,6 +27,8 @@ class ApodViewModel(
     }
 
     fun fetchApod() {
+        if (_isLoading.value) return
+
         viewModelScope.launch {
             _isLoading.value = true
             _errorMessage.value = null
@@ -37,8 +39,7 @@ class ApodViewModel(
                         _apod.value = response
                     }
                     .onFailure { error ->
-                        _errorMessage.value =
-                            error.message ?: "Failed to load astronomy data."
+                        _errorMessage.value = "${error::class.simpleName}: ${error.message}"
                     }
             } finally {
                 _isLoading.value = false

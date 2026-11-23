@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
 
-    private const val BASE_URL = "https://api.nasa.gov/"
+    private const val BASE_URL = "https://science.nasa.gov/"
 
     val apodApi: ApodApiService by lazy {
         Retrofit.Builder()

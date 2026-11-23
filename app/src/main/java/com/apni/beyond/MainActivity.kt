@@ -116,7 +116,9 @@ fun BeyondApp() {
                         .padding(innerPadding)
                 ) {
                     when (selectedTab) {
-                        0 -> HomeScreen()
+                        0 -> HomeScreen(
+                            onOpenGallery = { selectedTab = 2 }
+                        )
                         1 -> ExploreScreen()
                         2 -> GalleryScreen()
                         3 -> SavedScreen()
