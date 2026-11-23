@@ -16,6 +16,9 @@ class ApodViewModel(
     private val _apod = MutableStateFlow<ApodResponse?>(null)
     val apod: StateFlow<ApodResponse?> = _apod.asStateFlow()
 
+    private val _apodList = MutableStateFlow<List<ApodResponse>>(emptyList())
+    val apodList: StateFlow<List<ApodResponse>> = _apodList.asStateFlow()
+
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
@@ -34,12 +37,14 @@ class ApodViewModel(
             _errorMessage.value = null
 
             try {
-                repository.getApod()
+                repository.getApodList()
                     .onSuccess { response ->
-                        _apod.value = response
+                        _apodList.value = response
+                        _apod.value = response.firstOrNull()
                     }
                     .onFailure { error ->
-                        _errorMessage.value = "${error::class.simpleName}: ${error.message}"
+                        _errorMessage.value =
+                            error.message ?: "Failed to load astronomy data."
                     }
             } finally {
                 _isLoading.value = false
