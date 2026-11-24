@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -25,8 +26,6 @@ import com.apni.beyond.presentation.components.LocalAppLanguage
 import com.apni.beyond.presentation.components.appText
 
 private val AccentBlue = Color(0xFF789DFF)
-private val White = Color(0xFFF5F3ED)
-private val Muted = Color(0xFFA9B8C9)
 
 @Composable
 fun HomeScreen(
@@ -39,6 +38,9 @@ fun HomeScreen(
     val errorMessage by apodViewModel.errorMessage.collectAsState()
 
     val language = LocalAppLanguage.current
+
+    val textColor = MaterialTheme.colorScheme.onBackground
+    val mutedColor = MaterialTheme.colorScheme.onSurfaceVariant
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -117,8 +119,8 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    "Earth",
-                    color = White,
+                    appText("Earth", "Bumi", language),
+                    color = textColor,
                     fontSize = 27.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -129,7 +131,7 @@ fun HomeScreen(
                         "Rumah kita di alam semesta",
                         language
                     ),
-                    color = Muted
+                    color = mutedColor
                 )
             }
         }
@@ -152,7 +154,7 @@ fun HomeScreen(
                     "Gambar Astronomi Hari Ini",
                     language
                 ),
-                color = White,
+                color = textColor,
                 fontSize = 19.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -190,7 +192,7 @@ fun HomeScreen(
                     "Penemuan Hari Ini",
                     language
                 ),
-                color = White,
+                color = textColor,
                 fontSize = 19.sp,
                 fontWeight = FontWeight.Bold
             )

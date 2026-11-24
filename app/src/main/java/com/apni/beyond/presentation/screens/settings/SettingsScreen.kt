@@ -4,25 +4,24 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.apni.beyond.presentation.components.LocalAppLanguage
 import com.apni.beyond.presentation.components.appText
 
-private val White = Color(0xFFF5F3ED)
-private val Muted = Color(0xFFA9B8C9)
-
 @Composable
 fun SettingsScreen(
     language: String,
-    onLanguageChange: (String) -> Unit
+    onLanguageChange: (String) -> Unit,
+    isDarkMode: Boolean,
+    onThemeChange: (Boolean) -> Unit
 ) {
-    var darkMode by remember { mutableStateOf(true) }
     var animation by remember { mutableStateOf(true) }
     var expanded by remember { mutableStateOf(false) }
 
     val currentLanguage = LocalAppLanguage.current
+    val textColor = MaterialTheme.colorScheme.onBackground
+    val mutedColor = MaterialTheme.colorScheme.onSurfaceVariant
 
     Column(
         modifier = Modifier
@@ -31,7 +30,7 @@ fun SettingsScreen(
     ) {
         Text(
             text = appText("Settings", "Pengaturan", currentLanguage),
-            color = White,
+            color = textColor,
             fontSize = 28.sp
         )
 
@@ -39,7 +38,7 @@ fun SettingsScreen(
 
         Text(
             text = appText("Language", "Bahasa", currentLanguage),
-            color = White,
+            color = textColor,
             fontSize = 16.sp
         )
 
@@ -77,9 +76,13 @@ fun SettingsScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         SettingSwitch(
-            title = appText("Dark Mode", "Mode Gelap", currentLanguage),
-            checked = darkMode,
-            onCheckedChange = { darkMode = it }
+            title = appText(
+                "Dark Mode",
+                "Mode Gelap",
+                currentLanguage
+            ),
+            checked = isDarkMode,
+            onCheckedChange = onThemeChange
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -97,7 +100,7 @@ fun SettingsScreen(
         Spacer(modifier = Modifier.height(28.dp))
 
         HorizontalDivider(
-            color = Muted.copy(alpha = 0.3f)
+            color = mutedColor.copy(alpha = 0.3f)
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -108,7 +111,7 @@ fun SettingsScreen(
                 "Tentang Beyond",
                 currentLanguage
             ),
-            color = White,
+            color = textColor,
             fontSize = 18.sp
         )
 
@@ -120,7 +123,7 @@ fun SettingsScreen(
                 "BEYOND — Jelajahi alam semesta.",
                 currentLanguage
             ),
-            color = Muted,
+            color = mutedColor,
             fontSize = 14.sp
         )
 
@@ -130,7 +133,7 @@ fun SettingsScreen(
                 "Aplikasi observatorium luar angkasa.",
                 currentLanguage
             ),
-            color = Muted,
+            color = mutedColor,
             fontSize = 13.sp
         )
     }
@@ -148,7 +151,7 @@ private fun SettingSwitch(
     ) {
         Text(
             text = title,
-            color = White,
+            color = MaterialTheme.colorScheme.onBackground,
             fontSize = 15.sp
         )
 

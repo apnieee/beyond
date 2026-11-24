@@ -17,6 +17,7 @@ class ApodAdapter(
     private var items: List<ApodResponse>,
     private var savedIds: Set<String>,
     private var language: String,
+    private var isDarkMode: Boolean,
     private val onSaveClick: (ApodResponse) -> Unit,
     private val onItemClick: (ApodResponse) -> Unit
 ) : RecyclerView.Adapter<ApodAdapter.ApodViewHolder>() {
@@ -43,11 +44,6 @@ class ApodAdapter(
             orientation = LinearLayout.VERTICAL
             setPadding(8.dp(), 8.dp(), 8.dp(), 8.dp())
 
-            background = GradientDrawable().apply {
-                setColor(Color.rgb(27, 41, 64))
-                cornerRadius = 16.dp().toFloat()
-            }
-
             layoutParams = RecyclerView.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
@@ -70,7 +66,6 @@ class ApodAdapter(
         }
 
         val title = TextView(context).apply {
-            setTextColor(Color.rgb(245, 243, 237))
             textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
             maxLines = 2
@@ -78,7 +73,6 @@ class ApodAdapter(
         }
 
         val date = TextView(context).apply {
-            setTextColor(Color.rgb(169, 184, 201))
             textSize = 11f
             setPadding(2.dp(), 3.dp(), 2.dp(), 2.dp())
         }
@@ -86,10 +80,7 @@ class ApodAdapter(
         val saveButton = Button(context).apply {
             textSize = 12f
             isAllCaps = false
-            setTextColor(Color.WHITE)
-            backgroundTintList = ColorStateList.valueOf(
-                Color.TRANSPARENT
-            )
+            backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
             elevation = 0f
             minHeight = 36.dp()
         }
@@ -111,6 +102,39 @@ class ApodAdapter(
         val item = items[position]
         val id = item.postId?.toString() ?: item.date.orEmpty()
         val isSaved = savedIds.contains(id)
+
+        val cardColor = if (isDarkMode) {
+            Color.rgb(27, 41, 64)
+        } else {
+            Color.rgb(248, 246, 255)
+        }
+
+        val titleColor = if (isDarkMode) {
+            Color.rgb(245, 243, 237)
+        } else {
+            Color.rgb(42, 43, 70)
+        }
+
+        val mutedColor = if (isDarkMode) {
+            Color.rgb(169, 184, 201)
+        } else {
+            Color.rgb(105, 105, 130)
+        }
+
+        val buttonColor = if (isDarkMode) {
+            Color.rgb(120, 157, 255)
+        } else {
+            Color.rgb(91, 105, 190)
+        }
+
+        holder.layout.background = GradientDrawable().apply {
+            setColor(cardColor)
+            cornerRadius = 16.dp(holder).toFloat()
+        }
+
+        holder.title.setTextColor(titleColor)
+        holder.date.setTextColor(mutedColor)
+        holder.saveButton.setTextColor(buttonColor)
 
         holder.title.text = item.title ?: "Untitled"
         holder.date.text = item.date ?: ""
@@ -137,16 +161,22 @@ class ApodAdapter(
         }
     }
 
+    private fun Int.dp(holder: ApodViewHolder): Int {
+        return (this * holder.itemView.resources.displayMetrics.density).toInt()
+    }
+
     override fun getItemCount(): Int = items.size
 
     fun updateData(
         newItems: List<ApodResponse>,
         newSavedIds: Set<String>,
-        newLanguage: String
+        newLanguage: String,
+        newIsDarkMode: Boolean
     ) {
         items = newItems
         savedIds = newSavedIds
         language = newLanguage
+        isDarkMode = newIsDarkMode
         notifyDataSetChanged()
     }
 }

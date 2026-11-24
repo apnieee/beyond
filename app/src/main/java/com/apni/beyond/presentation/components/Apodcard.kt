@@ -2,11 +2,9 @@ package com.apni.beyond.presentation.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -45,9 +43,7 @@ fun ApodCard(
         translatedText = null
         translationFailed = false
 
-        if (language == "Bahasa Indonesia" &&
-            apod?.explanation != null
-        ) {
+        if (language == "Bahasa Indonesia" && apod?.explanation != null) {
             isTranslating = true
 
             val options = TranslatorOptions.Builder()
@@ -75,127 +71,120 @@ fun ApodCard(
         originalText
     }
 
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF1B2940)
-        )
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            when {
-                apod != null -> {
-                    Text(
-                        apod.title ?: "Astronomy Picture of the Day",
-                        fontSize = 18.sp,
-                        color = Color.White
-                    )
+    AppCard(modifier = Modifier.fillMaxWidth()) {
+        when {
+            apod != null -> {
+                Text(
+                    text = apod.title ?: "Astronomy Picture of the Day",
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
 
-                    when (apod.mediaType) {
-                        "image" -> {
-                            AsyncImage(
-                                model = apod.hdUrl ?: apod.url,
-                                contentDescription = apod.title,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(220.dp)
-                                    .clickable { onClick() },
-                                contentScale = ContentScale.Crop
-                            )
-                        }
+                Spacer(Modifier.height(10.dp))
 
-                        "video" -> {
-                            Text(
-                                text = if (language == "Bahasa Indonesia")
-                                    "Penemuan hari ini berupa video."
-                                else
-                                    "Today's discovery is a video.",
-                                color = Color.LightGray
-                            )
-                        }
-
-                        else -> {
-                            Text(
-                                text = if (language == "Bahasa Indonesia")
-                                    "Media tidak tersedia."
-                                else
-                                    "Media is currently unavailable.",
-                                color = Color.LightGray
-                            )
-                        }
-                    }
-
-                    Spacer(Modifier.height(8.dp))
-
-                    Text(
-                        apod.date ?: "Explore the universe",
-                        color = Color.LightGray
-                    )
-
-                    Text(
-                        text = description,
-                        color = Color.White,
-                        fontSize = 13.sp,
-                        maxLines = if (expanded) Int.MAX_VALUE else 5,
-                        overflow = TextOverflow.Ellipsis
-                    )
-
-                    if (isTranslating) {
-                        Spacer(Modifier.height(6.dp))
-                        Text(
-                            "Menerjemahkan...",
-                            color = Color.LightGray,
-                            fontSize = 12.sp
+                when (apod.mediaType) {
+                    "image" -> {
+                        AsyncImage(
+                            model = apod.hdUrl ?: apod.url,
+                            contentDescription = apod.title,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(220.dp)
+                                .clickable { onClick() },
+                            contentScale = ContentScale.Crop
                         )
                     }
 
-                    if (translationFailed) {
+                    "video" -> {
                         Text(
-                            "Terjemahan gagal. Menampilkan teks asli.",
-                            color = Color.LightGray,
-                            fontSize = 12.sp
+                            text = if (language == "Bahasa Indonesia")
+                                "Penemuan hari ini berupa video."
+                            else
+                                "Today's discovery is a video.",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
 
-                    TextButton(
-                        onClick = { expanded = !expanded }
-                    ) {
+                    else -> {
                         Text(
-                            if (language == "Bahasa Indonesia") {
-                                if (expanded) "Lebih sedikit" else "Selengkapnya"
-                            } else {
-                                if (expanded) "See less" else "See more"
-                            }
+                            text = if (language == "Bahasa Indonesia")
+                                "Media tidak tersedia."
+                            else
+                                "Media is currently unavailable.",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
 
-                isLoading -> {
-                    CircularProgressIndicator()
+                Spacer(Modifier.height(8.dp))
+
+                Text(
+                    text = apod.date ?: "Explore the universe",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                Text(
+                    text = description,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontSize = 13.sp,
+                    maxLines = if (expanded) Int.MAX_VALUE else 5,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                if (isTranslating) {
+                    Spacer(Modifier.height(6.dp))
+                    Text(
+                        "Menerjemahkan...",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 12.sp
+                    )
+                }
+
+                if (translationFailed) {
+                    Text(
+                        "Terjemahan gagal. Menampilkan teks asli.",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 12.sp
+                    )
+                }
+
+                TextButton(
+                    onClick = { expanded = !expanded }
+                ) {
+                    Text(
+                        if (language == "Bahasa Indonesia") {
+                            if (expanded) "Lebih sedikit" else "Selengkapnya"
+                        } else {
+                            if (expanded) "See less" else "See more"
+                        }
+                    )
+                }
+            }
+
+            isLoading -> {
+                CircularProgressIndicator()
+                Text(
+                    if (language == "Bahasa Indonesia")
+                        "Memuat data astronomi..."
+                    else
+                        "Loading astronomy data...",
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+
+            errorMessage != null -> {
+                Text(
+                    errorMessage,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                TextButton(onClick = onRetry) {
                     Text(
                         if (language == "Bahasa Indonesia")
-                            "Memuat data astronomi..."
+                            "Coba lagi"
                         else
-                            "Loading astronomy data..."
+                            "Try again"
                     )
-                }
-
-                errorMessage != null -> {
-                    Text(
-                        errorMessage,
-                        color = Color.LightGray
-                    )
-
-                    TextButton(onClick = onRetry) {
-                        Text(
-                            if (language == "Bahasa Indonesia")
-                                "Coba lagi"
-                            else
-                                "Try again"
-                        )
-                    }
                 }
             }
         }

@@ -1,22 +1,25 @@
 package com.apni.beyond.presentation.components
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
 fun PageTitle(
     title: String,
-    subtitle: String
+    subtitle: String,
+    modifier: Modifier = Modifier
 ) {
-    Column {
+    Column(
+        modifier = modifier
+    ) {
         Text(
             text = title,
-            color = Color(0xFFF5F3ED),
+            color = MaterialTheme.colorScheme.onBackground,
             fontSize = 28.sp
         )
 
@@ -24,7 +27,7 @@ fun PageTitle(
 
         Text(
             text = subtitle,
-            color = Color(0xFFA9B8C9),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 14.sp
         )
     }
