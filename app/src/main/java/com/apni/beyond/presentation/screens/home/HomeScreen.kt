@@ -13,16 +13,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.material3.Text
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import coil.compose.AsyncImage
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.apni.beyond.presentation.viewmodel.ApodViewModel
-import com.apni.beyond.data.model.ApodResponse
 import com.apni.beyond.presentation.components.PageTitle
 import com.apni.beyond.presentation.components.InfoCard
 import com.apni.beyond.presentation.components.PlanetVisual
 import com.apni.beyond.presentation.components.ApodCard
+import com.apni.beyond.presentation.components.LocalAppLanguage
+import com.apni.beyond.presentation.components.appText
 
 private val AccentBlue = Color(0xFF789DFF)
 private val White = Color(0xFFF5F3ED)
@@ -37,6 +37,8 @@ fun HomeScreen(
     val apod by apodViewModel.apod.collectAsState()
     val isLoading by apodViewModel.isLoading.collectAsState()
     val errorMessage by apodViewModel.errorMessage.collectAsState()
+
+    val language = LocalAppLanguage.current
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -54,8 +56,12 @@ fun HomeScreen(
 
         item {
             PageTitle(
-                "Look beyond.",
-                "There's a whole universe waiting to be explored."
+                appText("Look beyond.", "Lihat lebih jauh.", language),
+                appText(
+                    "There's a whole universe waiting to be explored.",
+                    "Ada seluruh alam semesta yang menunggu untuk dijelajahi.",
+                    language
+                )
             )
         }
 
@@ -118,7 +124,11 @@ fun HomeScreen(
                 )
 
                 Text(
-                    "Our home in the universe",
+                    appText(
+                        "Our home in the universe",
+                        "Rumah kita di alam semesta",
+                        language
+                    ),
                     color = Muted
                 )
             }
@@ -126,14 +136,22 @@ fun HomeScreen(
 
         item {
             InfoCard(
-                "Explore Planet",
-                "Discover planets, stars, galaxies, and more."
+                appText("Explore Planet", "Jelajahi Planet", language),
+                appText(
+                    "Discover planets, stars, galaxies, and more.",
+                    "Temukan planet, bintang, galaksi, dan lainnya.",
+                    language
+                )
             )
         }
 
         item {
             Text(
-                "Astronomy Picture of the Day",
+                appText(
+                    "Astronomy Picture of the Day",
+                    "Gambar Astronomi Hari Ini",
+                    language
+                ),
                 color = White,
                 fontSize = 19.sp,
                 fontWeight = FontWeight.Bold
@@ -152,22 +170,42 @@ fun HomeScreen(
 
         item {
             InfoCard(
-                "Discover the universe",
-                "Explore a new astronomical image and story every day."
+                appText(
+                    "Discover the universe",
+                    "Temukan Alam Semesta",
+                    language
+                ),
+                appText(
+                    "Explore a new astronomical image and story every day.",
+                    "Jelajahi gambar dan kisah astronomi baru setiap hari.",
+                    language
+                )
             )
         }
 
         item {
             Text(
-                "Today's Discovery",
+                appText(
+                    "Today's Discovery",
+                    "Penemuan Hari Ini",
+                    language
+                ),
                 color = White,
                 fontSize = 19.sp,
                 fontWeight = FontWeight.Bold
             )
 
             InfoCard(
-                "The universe is full of wonders",
-                "Discover something new beyond our world."
+                appText(
+                    "The universe is full of wonders",
+                    "Alam semesta penuh keajaiban",
+                    language
+                ),
+                appText(
+                    "Discover something new beyond our world.",
+                    "Temukan hal baru di luar dunia kita.",
+                    language
+                )
             )
         }
     }

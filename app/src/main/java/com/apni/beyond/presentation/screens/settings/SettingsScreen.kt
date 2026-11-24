@@ -1,23 +1,28 @@
 package com.apni.beyond.presentation.screens.settings
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.apni.beyond.presentation.components.LocalAppLanguage
+import com.apni.beyond.presentation.components.appText
 
-private val CardBlue = Color(0xFF1B2940)
 private val White = Color(0xFFF5F3ED)
 private val Muted = Color(0xFFA9B8C9)
 
 @Composable
-fun SettingsScreen() {
-    var language by remember { mutableStateOf("English") }
+fun SettingsScreen(
+    language: String,
+    onLanguageChange: (String) -> Unit
+) {
     var darkMode by remember { mutableStateOf(true) }
     var animation by remember { mutableStateOf(true) }
+    var expanded by remember { mutableStateOf(false) }
+
+    val currentLanguage = LocalAppLanguage.current
 
     Column(
         modifier = Modifier
@@ -25,21 +30,25 @@ fun SettingsScreen() {
             .padding(20.dp)
     ) {
         Text(
-            text = "Settings",
+            text = appText("Settings", "Pengaturan", currentLanguage),
             color = White,
             fontSize = 28.sp
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Text("Language", color = White, fontSize = 16.sp)
+        Text(
+            text = appText("Language", "Bahasa", currentLanguage),
+            color = White,
+            fontSize = 16.sp
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        var expanded by remember { mutableStateOf(false) }
-
         Box {
-            OutlinedButton(onClick = { expanded = true }) {
+            OutlinedButton(
+                onClick = { expanded = true }
+            ) {
                 Text(language)
             }
 
@@ -50,7 +59,7 @@ fun SettingsScreen() {
                 DropdownMenuItem(
                     text = { Text("English") },
                     onClick = {
-                        language = "English"
+                        onLanguageChange("English")
                         expanded = false
                     }
                 )
@@ -58,7 +67,7 @@ fun SettingsScreen() {
                 DropdownMenuItem(
                     text = { Text("Bahasa Indonesia") },
                     onClick = {
-                        language = "Bahasa Indonesia"
+                        onLanguageChange("Bahasa Indonesia")
                         expanded = false
                     }
                 )
@@ -68,7 +77,7 @@ fun SettingsScreen() {
         Spacer(modifier = Modifier.height(24.dp))
 
         SettingSwitch(
-            title = "Dark Mode",
+            title = appText("Dark Mode", "Mode Gelap", currentLanguage),
             checked = darkMode,
             onCheckedChange = { darkMode = it }
         )
@@ -76,29 +85,51 @@ fun SettingsScreen() {
         Spacer(modifier = Modifier.height(12.dp))
 
         SettingSwitch(
-            title = "Floating Animation",
+            title = appText(
+                "Floating Animation",
+                "Animasi Mengambang",
+                currentLanguage
+            ),
             checked = animation,
             onCheckedChange = { animation = it }
         )
 
         Spacer(modifier = Modifier.height(28.dp))
 
-        HorizontalDivider(color = Muted.copy(alpha = 0.3f))
+        HorizontalDivider(
+            color = Muted.copy(alpha = 0.3f)
+        )
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Text("About Beyond", color = White, fontSize = 18.sp)
+        Text(
+            text = appText(
+                "About Beyond",
+                "Tentang Beyond",
+                currentLanguage
+            ),
+            color = White,
+            fontSize = 18.sp
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "BEYOND — Explore the universe.",
+            text = appText(
+                "BEYOND — Explore the universe.",
+                "BEYOND — Jelajahi alam semesta.",
+                currentLanguage
+            ),
             color = Muted,
             fontSize = 14.sp
         )
 
         Text(
-            text = "A space observatory application.",
+            text = appText(
+                "A space observatory application.",
+                "Aplikasi observatorium luar angkasa.",
+                currentLanguage
+            ),
             color = Muted,
             fontSize = 13.sp
         )
@@ -115,7 +146,11 @@ private fun SettingSwitch(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(title, color = White, fontSize = 15.sp)
+        Text(
+            text = title,
+            color = White,
+            fontSize = 15.sp
+        )
 
         Switch(
             checked = checked,

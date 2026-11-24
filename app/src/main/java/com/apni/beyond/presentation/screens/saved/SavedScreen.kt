@@ -1,6 +1,5 @@
 package com.apni.beyond.presentation.screens.saved
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -17,6 +16,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.apni.beyond.presentation.viewmodel.ApodViewModel
 import com.apni.beyond.presentation.viewmodel.SavedViewModel
+import com.apni.beyond.presentation.components.LocalAppLanguage
+import com.apni.beyond.presentation.components.appText
 
 private val CardBlue = Color(0xFF1B2940)
 private val White = Color(0xFFF5F3ED)
@@ -27,6 +28,7 @@ fun SavedScreen() {
     val apodViewModel: ApodViewModel = viewModel()
     val savedViewModel: SavedViewModel = viewModel()
 
+    val language = LocalAppLanguage.current
     val apodList by apodViewModel.apodList.collectAsState()
     val savedIds by savedViewModel.savedIds.collectAsState()
     val isLoading by apodViewModel.isLoading.collectAsState()
@@ -42,7 +44,7 @@ fun SavedScreen() {
             .padding(20.dp)
     ) {
         Text(
-            text = "Saved",
+            text = appText("Saved", "Tersimpan", language),
             color = White,
             fontSize = 28.sp
         )
@@ -50,7 +52,11 @@ fun SavedScreen() {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Your personal space collection.",
+            text = appText(
+                "Your personal space collection.",
+                "Koleksi luar angkasa pribadimu.",
+                language
+            ),
             color = Muted,
             fontSize = 14.sp
         )
@@ -76,7 +82,11 @@ fun SavedScreen() {
                             .padding(20.dp)
                     ) {
                         Text(
-                            text = "Nothing saved yet",
+                            text = appText(
+                                "Nothing saved yet",
+                                "Belum ada yang tersimpan",
+                                language
+                            ),
                             color = White,
                             fontSize = 18.sp
                         )
@@ -84,7 +94,11 @@ fun SavedScreen() {
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Text(
-                            text = "Save your favorite space images from Gallery to find them here.",
+                            text = appText(
+                                "Save your favorite space images from Gallery to find them here.",
+                                "Simpan gambar luar angkasa favoritmu dari Galeri untuk menemukannya di sini.",
+                                language
+                            ),
                             color = Muted,
                             fontSize = 14.sp
                         )
@@ -94,7 +108,11 @@ fun SavedScreen() {
 
             else -> {
                 Text(
-                    text = "${savedPhotos.size} saved images",
+                    text = if (language == "Bahasa Indonesia") {
+                        "${savedPhotos.size} gambar tersimpan"
+                    } else {
+                        "${savedPhotos.size} saved images"
+                    },
                     color = Muted,
                     fontSize = 13.sp
                 )
@@ -154,7 +172,11 @@ fun SavedScreen() {
                                         }
                                     ) {
                                         Text(
-                                            text = "Remove",
+                                            text = appText(
+                                                "Remove",
+                                                "Hapus",
+                                                language
+                                            ),
                                             color = White
                                         )
                                     }
