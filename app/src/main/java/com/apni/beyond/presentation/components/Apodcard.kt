@@ -1,21 +1,23 @@
 package com.apni.beyond.presentation.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.foundation.clickable
 import androidx.core.text.HtmlCompat
 import coil.compose.AsyncImage
-import androidx.compose.ui.text.style.TextOverflow
 import com.apni.beyond.data.model.ApodResponse
+import com.google.mlkit.nl.translate.TranslateLanguage
+import com.google.mlkit.nl.translate.Translation
+import com.google.mlkit.nl.translate.TranslatorOptions
+import kotlinx.coroutines.tasks.await
 
 @Composable
 fun ApodCard(
@@ -25,7 +27,53 @@ fun ApodCard(
     onRetry: () -> Unit,
     onClick: () -> Unit
 ) {
-    val expanded = remember { mutableStateOf(false) }
+    val language = LocalAppLanguage.current
+
+    var expanded by remember { mutableStateOf(false) }
+    var translatedText by remember { mutableStateOf<String?>(null) }
+    var isTranslating by remember { mutableStateOf(false) }
+    var translationFailed by remember { mutableStateOf(false) }
+
+    val originalText = remember(apod?.explanation) {
+        HtmlCompat.fromHtml(
+            apod?.explanation ?: "No description available.",
+            HtmlCompat.FROM_HTML_MODE_COMPACT
+        ).toString()
+    }
+
+    LaunchedEffect(originalText, language) {
+        translatedText = null
+        translationFailed = false
+
+        if (language == "Bahasa Indonesia" &&
+            apod?.explanation != null
+        ) {
+            isTranslating = true
+
+            val options = TranslatorOptions.Builder()
+                .setSourceLanguage(TranslateLanguage.ENGLISH)
+                .setTargetLanguage(TranslateLanguage.INDONESIAN)
+                .build()
+
+            val translator = Translation.getClient(options)
+
+            try {
+                translator.downloadModelIfNeeded().await()
+                translatedText = translator.translate(originalText).await()
+            } catch (e: Exception) {
+                translationFailed = true
+            } finally {
+                translator.close()
+                isTranslating = false
+            }
+        }
+    }
+
+    val description = if (language == "Bahasa Indonesia") {
+        translatedText ?: originalText
+    } else {
+        originalText
+    }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -60,14 +108,20 @@ fun ApodCard(
 
                         "video" -> {
                             Text(
-                                text = "Today's discovery is a video.",
+                                text = if (language == "Bahasa Indonesia")
+                                    "Penemuan hari ini berupa video."
+                                else
+                                    "Today's discovery is a video.",
                                 color = Color.LightGray
                             )
                         }
 
                         else -> {
                             Text(
-                                "Media is currently unavailable.",
+                                text = if (language == "Bahasa Indonesia")
+                                    "Media tidak tersedia."
+                                else
+                                    "Media is currently unavailable.",
                                 color = Color.LightGray
                             )
                         }
@@ -81,38 +135,66 @@ fun ApodCard(
                     )
 
                     Text(
-                        text = HtmlCompat.fromHtml(
-                            apod.explanation ?: "No description available.",
-                            HtmlCompat.FROM_HTML_MODE_COMPACT
-                        ).toString(),
+                        text = description,
                         color = Color.White,
                         fontSize = 13.sp,
-                        maxLines = if (expanded.value) Int.MAX_VALUE else 5,
+                        maxLines = if (expanded) Int.MAX_VALUE else 5,
                         overflow = TextOverflow.Ellipsis
                     )
 
+                    if (isTranslating) {
+                        Spacer(Modifier.height(6.dp))
+                        Text(
+                            "Menerjemahkan...",
+                            color = Color.LightGray,
+                            fontSize = 12.sp
+                        )
+                    }
+
+                    if (translationFailed) {
+                        Text(
+                            "Terjemahan gagal. Menampilkan teks asli.",
+                            color = Color.LightGray,
+                            fontSize = 12.sp
+                        )
+                    }
+
                     TextButton(
-                        onClick = {
-                            expanded.value = !expanded.value
-                        }
+                        onClick = { expanded = !expanded }
                     ) {
-                        Text(if (expanded.value) "See less" else "See more")
+                        Text(
+                            if (language == "Bahasa Indonesia") {
+                                if (expanded) "Lebih sedikit" else "Selengkapnya"
+                            } else {
+                                if (expanded) "See less" else "See more"
+                            }
+                        )
                     }
                 }
 
                 isLoading -> {
                     CircularProgressIndicator()
-                    Text("Loading astronomy data...")
+                    Text(
+                        if (language == "Bahasa Indonesia")
+                            "Memuat data astronomi..."
+                        else
+                            "Loading astronomy data..."
+                    )
                 }
 
                 errorMessage != null -> {
                     Text(
-                        errorMessage ?: "Unknown error",
+                        errorMessage,
                         color = Color.LightGray
                     )
 
                     TextButton(onClick = onRetry) {
-                        Text("Try again")
+                        Text(
+                            if (language == "Bahasa Indonesia")
+                                "Coba lagi"
+                            else
+                                "Try again"
+                        )
                     }
                 }
             }

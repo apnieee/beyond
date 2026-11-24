@@ -29,14 +29,7 @@ fun SavedScreen() {
     val savedViewModel: SavedViewModel = viewModel()
 
     val language = LocalAppLanguage.current
-    val apodList by apodViewModel.apodList.collectAsState()
-    val savedIds by savedViewModel.savedIds.collectAsState()
-    val isLoading by apodViewModel.isLoading.collectAsState()
-
-    val savedPhotos = apodList.filter { item ->
-        val id = item.postId?.toString() ?: item.date.orEmpty()
-        savedIds.contains(id)
-    }
+    val savedPhotos by savedViewModel.savedPhotos.collectAsState()
 
     Column(
         modifier = Modifier
@@ -64,10 +57,6 @@ fun SavedScreen() {
         Spacer(modifier = Modifier.height(20.dp))
 
         when {
-            isLoading && apodList.isEmpty() -> {
-                CircularProgressIndicator()
-            }
-
             savedPhotos.isEmpty() -> {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -168,7 +157,7 @@ fun SavedScreen() {
 
                                     TextButton(
                                         onClick = {
-                                            savedViewModel.toggleSaved(imageId)
+                                            savedViewModel.removeSaved(imageId)
                                         }
                                     ) {
                                         Text(

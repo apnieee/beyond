@@ -117,13 +117,9 @@ fun GalleryScreen() {
                     ApodAdapter(
                         items = emptyList(),
                         savedIds = emptySet(),
+                        language = language,
                         onSaveClick = { item ->
-                            val id = item.postId?.toString()
-                                ?: item.date.orEmpty()
-
-                            if (id.isNotEmpty()) {
-                                savedViewModel.toggleSaved(id)
-                            }
+                            savedViewModel.toggleSaved(item)
                         },
                         onItemClick = { item ->
                             selectedImage = item
@@ -131,8 +127,8 @@ fun GalleryScreen() {
                     )
                 }
 
-                LaunchedEffect(apodList, savedIds) {
-                    adapter.updateData(apodList, savedIds)
+                LaunchedEffect(apodList, savedIds, language) {
+                    adapter.updateData(apodList, savedIds, language)
                 }
 
                 AndroidView(
@@ -148,7 +144,7 @@ fun GalleryScreen() {
                         }
                     },
                     update = {
-                        adapter.updateData(apodList, savedIds)
+                        adapter.updateData(apodList, savedIds, language)
                     }
                 )
             }

@@ -16,6 +16,7 @@ import com.apni.beyond.data.model.ApodResponse
 class ApodAdapter(
     private var items: List<ApodResponse>,
     private var savedIds: Set<String>,
+    private var language: String,
     private val onSaveClick: (ApodResponse) -> Unit,
     private val onItemClick: (ApodResponse) -> Unit
 ) : RecyclerView.Adapter<ApodAdapter.ApodViewHolder>() {
@@ -120,8 +121,12 @@ class ApodAdapter(
             error(android.R.drawable.ic_menu_report_image)
         }
 
-        holder.saveButton.text =
-            if (isSaved) "Saved" else "Save"
+        holder.saveButton.text = when {
+            language == "Bahasa Indonesia" && isSaved -> "Tersimpan"
+            language == "Bahasa Indonesia" -> "Simpan"
+            isSaved -> "Saved"
+            else -> "Save"
+        }
 
         holder.saveButton.setOnClickListener {
             onSaveClick(item)
@@ -136,10 +141,12 @@ class ApodAdapter(
 
     fun updateData(
         newItems: List<ApodResponse>,
-        newSavedIds: Set<String>
+        newSavedIds: Set<String>,
+        newLanguage: String
     ) {
         items = newItems
         savedIds = newSavedIds
+        language = newLanguage
         notifyDataSetChanged()
     }
 }
