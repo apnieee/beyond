@@ -122,6 +122,12 @@ fun BeyondApp() {
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Crop
                         )
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Color(0xFFEFF3FA).copy(alpha = 0.15f))
+                        )
                     }
                 }
 
@@ -182,9 +188,8 @@ fun BeyondApp() {
                         when (selectedTab) {
 
                             0 -> HomeScreen(
-                                onOpenGallery = {
-                                    selectedTab = 2
-                                }
+                                onOpenGallery = { selectedTab = 2 },
+                                onOpenExplore = { selectedTab = 1 }
                             )
 
                             1 -> ExploreScreen()

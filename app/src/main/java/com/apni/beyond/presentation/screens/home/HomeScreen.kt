@@ -25,11 +25,10 @@ import com.apni.beyond.presentation.components.ApodCard
 import com.apni.beyond.presentation.components.LocalAppLanguage
 import com.apni.beyond.presentation.components.appText
 
-private val AccentBlue = Color(0xFF789DFF)
-
 @Composable
 fun HomeScreen(
-    onOpenGallery: () -> Unit
+    onOpenGallery: () -> Unit,
+    onOpenExplore: () -> Unit
 ) {
     val apodViewModel: ApodViewModel = viewModel()
 
@@ -50,7 +49,7 @@ fun HomeScreen(
         item {
             Text(
                 "BEYOND.",
-                color = AccentBlue,
+                color = MaterialTheme.colorScheme.primary,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -137,14 +136,20 @@ fun HomeScreen(
         }
 
         item {
-            InfoCard(
-                appText("Explore Planet", "Jelajahi Planet", language),
-                appText(
-                    "Discover planets, stars, galaxies, and more.",
-                    "Temukan planet, bintang, galaksi, dan lainnya.",
-                    language
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onOpenExplore() }
+            ) {
+                InfoCard(
+                    appText("Explore Planet", "Jelajahi Planet", language),
+                    appText(
+                        "Discover planets, stars, galaxies, and more.",
+                        "Temukan planet, bintang, galaksi, dan lainnya.",
+                        language
+                    )
                 )
-            )
+            }
         }
 
         item {
@@ -171,18 +176,24 @@ fun HomeScreen(
         }
 
         item {
-            InfoCard(
-                appText(
-                    "Discover the universe",
-                    "Temukan Alam Semesta",
-                    language
-                ),
-                appText(
-                    "Explore a new astronomical image and story every day.",
-                    "Jelajahi gambar dan kisah astronomi baru setiap hari.",
-                    language
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onOpenGallery() }
+            ) {
+                InfoCard(
+                    appText(
+                        "Discover the universe",
+                        "Temukan Alam Semesta",
+                        language
+                    ),
+                    appText(
+                        "Explore a new astronomical image and story every day.",
+                        "Jelajahi gambar dan kisah astronomi baru setiap hari.",
+                        language
+                    )
                 )
-            )
+            }
         }
 
         item {
@@ -197,18 +208,24 @@ fun HomeScreen(
                 fontWeight = FontWeight.Bold
             )
 
-            InfoCard(
-                appText(
-                    "The universe is full of wonders",
-                    "Alam semesta penuh keajaiban",
-                    language
-                ),
-                appText(
-                    "Discover something new beyond our world.",
-                    "Temukan hal baru di luar dunia kita.",
-                    language
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onOpenExplore() }
+            ) {
+                InfoCard(
+                    appText(
+                        "The universe is full of wonders",
+                        "Alam semesta penuh keajaiban",
+                        language
+                    ),
+                    appText(
+                        "Discover something new beyond our world.",
+                        "Temukan hal baru di luar dunia kita.",
+                        language
+                    )
                 )
-            )
+            }
         }
     }
 }

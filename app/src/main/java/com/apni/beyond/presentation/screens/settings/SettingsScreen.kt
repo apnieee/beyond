@@ -1,3 +1,4 @@
+
 package com.apni.beyond.presentation.screens.settings
 
 import androidx.compose.foundation.layout.*
@@ -16,7 +17,6 @@ fun SettingsScreen(
     isDarkMode: Boolean,
     onThemeChange: (Boolean) -> Unit
 ) {
-    var animation by remember { mutableStateOf(true) }
     var expanded by remember { mutableStateOf(false) }
 
     val currentLanguage = LocalAppLanguage.current
@@ -83,18 +83,6 @@ fun SettingsScreen(
             ),
             checked = isDarkMode,
             onCheckedChange = onThemeChange
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        SettingSwitch(
-            title = appText(
-                "Floating Animation",
-                "Animasi Mengambang",
-                currentLanguage
-            ),
-            checked = animation,
-            onCheckedChange = { animation = it }
         )
 
         Spacer(modifier = Modifier.height(28.dp))

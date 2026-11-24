@@ -5,12 +5,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -52,7 +55,15 @@ fun ExploreScreen(
     var selectedCategory by remember { mutableStateOf("") }
     var selectedItem by remember { mutableStateOf<NasaItem?>(null) }
 
-    // Buka halaman detail jika kartu dipilih
+    fun performSearch() {
+        val searchQuery = query.trim()
+
+        if (searchQuery.isNotEmpty()) {
+            selectedCategory = searchQuery
+            exploreViewModel.searchObjects(searchQuery)
+        }
+    }
+
     if (selectedItem != null) {
         ExploreDetailScreen(
             item = selectedItem!!,
@@ -132,16 +143,21 @@ fun ExploreScreen(
                     )
                 },
                 singleLine = true,
-                shape = MaterialTheme.shapes.large
+                shape = MaterialTheme.shapes.large,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        performSearch()
+                    }
+                )
             )
 
             Spacer(Modifier.height(8.dp))
 
             Button(
-                onClick = {
-                    selectedCategory = query
-                    exploreViewModel.searchObjects(query)
-                },
+                onClick = { performSearch() },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = query.isNotBlank()
             ) {
